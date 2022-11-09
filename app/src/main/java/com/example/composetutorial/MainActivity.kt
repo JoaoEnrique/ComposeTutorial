@@ -3,33 +3,55 @@ package com.example.composetutorial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.composetutorial.ui.theme.ComposeTutorialTheme
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {//define o layout da atividade
-            Text("Hello Word!")//mostra uma mensagem na tela
+            MessageCard(Message("Android", "Jetpack Compose"))
         }
     }
 }
 
-@Composable // função composta
-fun MessageCard(name: String) { //função MessageCard que recebe um nome
-    Text(text = "Hello $name!")//mostrar um texto com o nome
+data class Message(val author: String, val body: String)
+
+@Composable
+fun MessageCard(msg: Message) {
+    Row(modifier = Modifier.padding(all = 8.dp)) {//adiciona padding
+        Image(//adiciona imagem
+            painter = painterResource(R.drawable.avatar),//caminho da imagem
+            contentDescription = "Contact profile picture",//descricao da imagem
+            modifier = Modifier
+                .size(40.dp)//tamanho da imagem
+                .clip(CircleShape) //deixa imagem redonda
+        )
+
+        Spacer(modifier = Modifier.width(8.dp)) //adiciona espaco horizontal entre a imagem e a coluna
+
+        Column {//adiciona uma coluna
+            Text(text = msg.author)//adiciona texto da variavel author (funcao PreviewMessageCard)
+            Spacer(modifier = Modifier.height(4.dp)) //adiciona espaço entre o author e a mensagem
+            Text(text = msg.body)//mostra a mensagem da variavel body (funcao PreviewMessageCard)
+        }
+    }
 }
 
-//@Preview  permite visualizar as funções de composição, não pode ser usada na MessageCard por ela
-// possiuir parametros, então é criado a função PreviewMessageCard
 @Preview
-@Composable // função composta
-fun PreviewMessageCard() {//Função PreviewMessageCard
-    MessageCard("Android")//Chama Função MessageCard passando um nome como parametro
+@Composable
+fun PreviewMessageCard(){//funcao PreviewMessageCard
+    MessageCard(//define a variavel author e body
+        msg = Message("João", "Hey, take a look at Jetpack Compose, it's great!")
+    )
 }
+
+
